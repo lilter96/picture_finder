@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PictureFinder.Data\PictureFinder.Data.csproj" />
+    <ProjectReference Include="..\PictureFinder.Domain\PictureFinder.Domain.csproj" />
+    <ProjectReference Include="..\PictureFinder.Integration.Telegram\PictureFinder.Integration.Telegram.csproj" />
+  </ItemGroup>
+
+</Project>

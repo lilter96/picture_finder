@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PictureFinder.Data.Sql", "PictureFinder.Data.Sql\PictureFinder.Data.Sql.csproj", "{186982F0-2364-4B8F-85F1-D3591776F3C5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PictureFinder.Application", "PictureFinder.Application\PictureFinder.Application.csproj", "{79F7891F-A4C9-42A4-8686-8D975A972EB2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PictureFinder.Domain", "PictureFinder.Domain\PictureFinder.Domain.csproj", "{C7807322-3292-456F-AA25-D99EAE902276}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PictureFinder.Presentation", "PictureFinder.Presentation\PictureFinder.Presentation.csproj", "{E60BB472-4033-46AB-AC3B-98DE9950FBB4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PictureFinder.Integration.Telegram", "PictureFinder.Integration.Telegram\PictureFinder.Integration.Telegram.csproj", "{A9DD8773-7B9D-4D19-9939-D50EB8EFBD6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PictureFinder.Data", "PictureFinder.Data\PictureFinder.Data.csproj", "{BC5B41CD-AD0A-4617-AD7F-3FDA0F6745EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{186982F0-2364-4B8F-85F1-D3591776F3C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{186982F0-2364-4B8F-85F1-D3591776F3C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{186982F0-2364-4B8F-85F1-D3591776F3C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{186982F0-2364-4B8F-85F1-D3591776F3C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79F7891F-A4C9-42A4-8686-8D975A972EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79F7891F-A4C9-42A4-8686-8D975A972EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79F7891F-A4C9-42A4-8686-8D975A972EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79F7891F-A4C9-42A4-8686-8D975A972EB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7807322-3292-456F-AA25-D99EAE902276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7807322-3292-456F-AA25-D99EAE902276}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7807322-3292-456F-AA25-D99EAE902276}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7807322-3292-456F-AA25-D99EAE902276}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E60BB472-4033-46AB-AC3B-98DE9950FBB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E60BB472-4033-46AB-AC3B-98DE9950FBB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E60BB472-4033-46AB-AC3B-98DE9950FBB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E60BB472-4033-46AB-AC3B-98DE9950FBB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9DD8773-7B9D-4D19-9939-D50EB8EFBD6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9DD8773-7B9D-4D19-9939-D50EB8EFBD6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9DD8773-7B9D-4D19-9939-D50EB8EFBD6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9DD8773-7B9D-4D19-9939-D50EB8EFBD6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC5B41CD-AD0A-4617-AD7F-3FDA0F6745EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC5B41CD-AD0A-4617-AD7F-3FDA0F6745EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC5B41CD-AD0A-4617-AD7F-3FDA0F6745EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC5B41CD-AD0A-4617-AD7F-3FDA0F6745EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {705EB87A-AF90-41E0-B062-54CC44F82B46}
+	EndGlobalSection
+EndGlobal
