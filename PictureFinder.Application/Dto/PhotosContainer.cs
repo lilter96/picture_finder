@@ -4,6 +4,8 @@ namespace PictureFinder.Application.Dto
 {
     public abstract class PhotosContainerDto
     {
+        public string MediaGroupId { get; set; }
+
         public string Caption { get; set; }
 
         public List<MessageEntityDto> CaptionEntities { get; set; }

@@ -2,7 +2,7 @@
 {
     public class UpdateDto
     {
-        public int UpdateId { get; set; }
+        public string UpdateId { get; set; }
 
         public MessageDto Message { get; set; }
 

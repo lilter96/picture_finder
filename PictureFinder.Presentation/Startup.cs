@@ -1,10 +1,14 @@
-﻿using System.Reflection;
+﻿using System.Buffers;
+using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using PictureFinder.Application.WebServices;
@@ -13,6 +17,7 @@ using PictureFinder.Data.Sql;
 using PictureFinder.Data.Sql.Repository;
 using PictureFinder.Integration.Telegram;
 using PictureFinder.Presentation.ExceptionHandling;
+using Serilog;
 
 namespace PictureFinder.Presentation
 {
@@ -60,22 +65,24 @@ namespace PictureFinder.Presentation
             });
 
             services.AddTransient<ITelegramService, TelegramService>();
+            services.AddTransient<IPhotoService, PhotoService>();
 
-            services.AddLogging();
-
-            services.AddControllers().AddNewtonsoftJson(opt =>
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
             {
-                opt.SerializerSettings.ContractResolver = new DefaultContractResolver
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver
                 {
-                    NamingStrategy = new SnakeCaseNamingStrategy()
+                    NamingStrategy = new DefaultNamingStrategy()
                 };
             });
 
-            
+
             services.AddHealthChecks();
+
+
+            ConfigureModelBindingExceptionHandling(services);
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -87,6 +94,7 @@ namespace PictureFinder.Presentation
                 app.UseHsts();
             }
 
+            loggerFactory.AddSerilog();
             app.UseHttpsRedirection();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseRouting();
@@ -97,8 +105,27 @@ namespace PictureFinder.Presentation
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Telegram}/{action=Update}/{id?}");
+                    pattern: "{controller=Photo}/{action=Index}/{id?}");
                 endpoints.MapHealthChecks("/health");
+            });
+        }
+
+        private static void ConfigureModelBindingExceptionHandling(IServiceCollection services)
+        {
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = actionContext =>
+                {
+                    var error = actionContext.ModelState
+                        .Where(e => e.Value.Errors.Count > 0)
+                        .Select(e => new ValidationProblemDetails(actionContext.ModelState)).FirstOrDefault();
+
+                    Log.Error($"{{@RequestPath}} received invalid message format: {{@Exception}}. {{@ModelState}}", 
+                       actionContext.HttpContext.Request.Path.Value, 
+                       error.Errors.Values,
+                       actionContext.ModelState.Keys);
+                    return new BadRequestObjectResult(error);
+                };
             });
         }
     }

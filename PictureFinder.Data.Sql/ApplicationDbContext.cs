@@ -13,7 +13,7 @@ namespace PictureFinder.Data.Sql
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
             base(options)
         {
-            
+
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -21,6 +21,7 @@ namespace PictureFinder.Data.Sql
             base.OnModelCreating(builder);
 
             builder.Entity<Photo>().HasKey(photo => photo.Id);
+            builder.Entity<Photo>().HasIndex(photo => photo.MediaGroupId);
             builder.Entity<Photo>().HasMany(x => x.Tags).WithMany(y => y.Photos);
 
             builder.Entity<Tag>().HasKey(tag => tag.Id);

@@ -1,0 +1,26 @@
+﻿body {
+}
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.photo-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.photo-container img {
+    margin: 20px;
+}
+
+.tag-input {
+    display: flex;
+}

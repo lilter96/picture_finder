@@ -4,7 +4,7 @@ namespace PictureFinder.Application.Exceptions
 {
     public class UpdateObjectDoesNotContainPhotoException : Exception
     {
-        public string Message { get; }
+        public override string Message { get; }
 
         public UpdateObjectDoesNotContainPhotoException(string message)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using PictureFinder.Application.Dto;
@@ -30,33 +31,33 @@ namespace PictureFinder.Application.WebServices
             _tagRepository = tagRepository;
         }
 
-        public async Task SavePhotoWithTags(UpdateDto updateDto)
+        public async Task SavePhotoWithTagsAsync(UpdateDto updateDto)
         {
             var photosContainer = GetObjectContainsPhotos(updateDto);
             var fileId = GetFileIdWithTheBestQuality(photosContainer.Photo);
-            var tags = ExtractTagsFromCaption(photosContainer.Caption, photosContainer.CaptionEntities);
+            var mediaGroupId = photosContainer.MediaGroupId;
+
+            if (string.IsNullOrEmpty(photosContainer.Caption))
+            {
+                photosContainer.Caption = await GetTagsFromSameMediaGroupOrUtcAsync(mediaGroupId);
+            }
+
+            var tags = ExtractTagsFromCaption(photosContainer.Caption);
 
             tags = await _tagRepository.SetIdsIfExists(tags);
 
-            if (tags.Count == 0)
-            {
-                tags.Add(new Tag
-                {
-                    Name = DateTime.UtcNow.ToShortTimeString()
-                });
-            }
-            
-            var filePath = await GetFilePath(fileId);
+            var filePath = await GetFilePathAsync(fileId);
 
             var photoUrl = CreatePhotoUrl(filePath);
 
             var addPhotoWithTagsDto = new AddPhotoWithTagsRequestDto
             {
+                MediaGroupId = mediaGroupId,
                 PhotoUrl = photoUrl,
                 Tags = tags
             };
 
-            var photo = await _photoRepository.AddPhotoWithTags(addPhotoWithTagsDto);
+            await _photoRepository.AddPhotoWithTagsAsync(addPhotoWithTagsDto);
         }
 
         private static PhotosContainerDto GetObjectContainsPhotos(UpdateDto updateDto)
@@ -78,39 +79,43 @@ namespace PictureFinder.Application.WebServices
             throw new UpdateObjectDoesNotContainPhotoException($"{nameof(updateDto)} does not contain photo.");
         }
 
-        private string GetFileIdWithTheBestQuality(IList<PhotoSizeDto> photos)
+        private static string GetFileIdWithTheBestQuality(IList<PhotoSizeDto> photos)
         {
             var maxSize = photos.Max(x => x.FileSize);
             var photo = photos.FirstOrDefault(x => x.FileSize == maxSize);
 
-            return photo.FileId;
+            return photo?.FileId;
         }
 
-        private async Task<string> GetFilePath(string fileId)
+        private async Task<string> GetFilePathAsync(string fileId)
         {
             return await _telegramBotClient.GetFilePath(fileId);
         }
 
         private string CreatePhotoUrl(string filePath) =>
-            _telegramBotConfiguration.BaseBotApiUrl
+            _telegramBotConfiguration.BaseFilesApiUrl
             + _telegramBotConfiguration.ApiKey
             + "/"
             + string.Format(TelegramBotApiUrls.DownloadFile, filePath);
 
-        private static List<Tag> ExtractTagsFromCaption(string caption, List<MessageEntityDto> captionEntities)
+        private static List<Tag> ExtractTagsFromCaption(string caption)
         {
-            var tags = new List<Tag>();
-
-            captionEntities.ForEach(captionEntity =>
+            return new List<Tag> { new Tag
             {
-                var tagText = new string(caption.Skip(captionEntity.Offset).Take(captionEntity.Length).ToArray());;
-                tags.Add(new Tag
-                {
-                    Name = tagText
-                });
-            });
+                Name = caption
+            }};
+        }
 
-            return tags;
+        private async Task<string> GetTagsFromSameMediaGroupOrUtcAsync(string mediaGroupId)
+        {
+            var tags = await _photoRepository.GetTagsFromSameMediaGroupsAsync(mediaGroupId);
+
+            if (tags == null || tags.Count == 0)
+            {
+                return DateTime.UtcNow.ToLongDateString();
+            }
+
+            return tags.First().Name;
         }
     }
 }

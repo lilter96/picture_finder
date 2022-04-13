@@ -4,8 +4,8 @@
     {
         public int UpdateId { get; set; }
 
-        public Message Message { get; set; }
+        public Message? Message { get; set; }
 
-        public ChannelPost ChannelPost { get; set; }
+        public ChannelPost? ChannelPost { get; set; }
     }
 }

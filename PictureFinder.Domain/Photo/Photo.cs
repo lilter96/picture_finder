@@ -10,6 +10,8 @@ namespace PictureFinder.Domain.Photo
 
         public string Url { get; set; }
 
-        public List<Tag.Tag> Tags { get; set; }
+        public string MediaGroupId { get; set; }
+
+        public List<Tag.Tag> Tags { get; set; } = new List<Tag.Tag>();
     }
 }

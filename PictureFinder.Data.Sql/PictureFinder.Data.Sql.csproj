@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PictureFinder.Application\PictureFinder.Application.csproj" />
     <ProjectReference Include="..\PictureFinder.Data\PictureFinder.Data.csproj" />
     <ProjectReference Include="..\PictureFinder.Domain\PictureFinder.Domain.csproj" />
   </ItemGroup>

@@ -5,6 +5,6 @@ namespace PictureFinder.Application.WebServices
 {
     public interface ITelegramService
     {
-        public Task SavePhotoWithTags(UpdateDto updateDto);
+        public Task SavePhotoWithTagsAsync(UpdateDto updateDto);
     }
 }

@@ -2,7 +2,7 @@
 {
     public class MessageEntity
     {
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         public int Offset { get; set; }
 

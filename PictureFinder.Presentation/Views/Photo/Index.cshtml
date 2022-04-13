@@ -1,0 +1,51 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model PictureFinder.Presentation.Models.Photo.PhotoResponseModel
+@*
+*@
+@{
+}
+<html>
+<head>
+    <title>PhotoFinder</title>
+    <link rel="stylesheet" href="dist/index.css" />
+    <script type="text/javascript" src="dist/index.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <h1>PictureFinder</h1>
+    <div class="tag-input">
+        <form method="post" asp-controller="Photo" asp-action="Index">
+            <input type="text" name="TagName" value="@Model.SearchTagName" />
+            <button type="submit">Search</button>
+        </form>
+
+        @{
+            if (!(@Model.Photos == null || @Model.Photos.Count == 0))
+            {
+                <input id="delete-input" name="IsDeleted" type="submit" value="Delete">
+            }
+        }
+    </div>
+    <div class="photo-container">
+        @{
+            if (@Model.Photos == null || @Model.Photos.Count == 0)
+            {
+                <div>Нет фоток</div>
+            }
+            else 
+            {
+                foreach (var photo in Model.Photos)
+                {
+                    <img height="100" width="100" src=@photo.ImageUrl alt="Photo"/>
+                }
+            }
+        }
+    </div>
+</div>
+</body>
+</html>
+
+<script>
+    window.addEventListener("load", new DeleteClass().init);
+</script>
