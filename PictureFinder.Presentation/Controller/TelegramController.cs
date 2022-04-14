@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using PictureFinder.Application.Dto;
 using PictureFinder.Application.WebServices;
 using PictureFinder.Integration.Telegram.Models;

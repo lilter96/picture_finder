@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using PictureFinder.Integration.Telegram.Models;
 using RestSharp;
 using RestSharp.Serializers.NewtonsoftJson;
@@ -17,7 +15,7 @@ namespace PictureFinder.Integration.Telegram
         private readonly JsonSerializerSettings _jsonSerializerSettings;
 
         public TelegramBotClient(
-            TelegramBotConfiguration telegramBotConfiguration, 
+            TelegramBotConfiguration telegramBotConfiguration,
             JsonSerializerSettings jsonSerializerSettings)
         {
             _jsonSerializerSettings = jsonSerializerSettings;
@@ -42,10 +40,7 @@ namespace PictureFinder.Integration.Telegram
 
             var response = await _botApiClient.ExecuteAsync(request);
 
-            if (!response.IsSuccessful)
-            {
-                throw new ApplicationException();
-            }
+            if (!response.IsSuccessful) throw new ApplicationException();
         }
 
         public async Task<DownloadPhotoResponse> DownloadPhoto(DownloadPhotoRequest downloadPhotoRequest)
@@ -55,7 +50,7 @@ namespace PictureFinder.Integration.Telegram
             var url = string.Format(TelegramBotApiUrls.DownloadFile, filePath);
             var request = new RestRequest(url)
             {
-                Method = Method.Get,
+                Method = Method.Get
             };
 
             var response = await _downloadFilesApiClient.DownloadDataAsync(request);
@@ -77,7 +72,8 @@ namespace PictureFinder.Integration.Telegram
 
             var response = await _botApiClient.ExecuteAsync(request);
 
-            var fileInfoResponse = JsonConvert.DeserializeObject<GetFileInfoResponse>(response.Content, _jsonSerializerSettings);
+            var fileInfoResponse =
+                JsonConvert.DeserializeObject<GetFileInfoResponse>(response.Content, _jsonSerializerSettings);
 
             return fileInfoResponse.Result.FilePath;
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Buffers;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -20,7 +19,8 @@ namespace PictureFinder.Presentation.Filters
         {
             var mvcOptions = context.HttpContext.RequestServices.GetRequiredService<IOptions<MvcOptions>>().Value;
             var inputFormatters = mvcOptions.InputFormatters;
-            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<SnakeCaseRequestFormatFilterAttribute>>();
+            var logger = context.HttpContext.RequestServices
+                .GetRequiredService<ILogger<SnakeCaseRequestFormatFilterAttribute>>();
             var jsonSerializerSettings = new JsonSerializerSettings
             {
                 ContractResolver = new DefaultContractResolver

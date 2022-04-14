@@ -1,5 +1,4 @@
-﻿using System.Buffers;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,21 +16,29 @@ using PictureFinder.Data.Sql;
 using PictureFinder.Data.Sql.Repository;
 using PictureFinder.Integration.Telegram;
 using PictureFinder.Presentation.ExceptionHandling;
+using PictureFinder.Presentation.HostedService;
 using Serilog;
 
 namespace PictureFinder.Presentation
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(
+            IConfiguration configuration,
+            IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
 
+        public IWebHostEnvironment Environment { get; set; }
+
         public void ConfigureServices(IServiceCollection services)
         {
+            if (Environment.IsDevelopment()) services.AddHostedService<TunnelService>();
+
             services.AddAutoMapper(typeof(Program));
 
             services.AddDbContext<ApplicationDbContext>(
@@ -104,8 +111,8 @@ namespace PictureFinder.Presentation
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Photo}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Photo}/{action=Index}/{id?}");
                 endpoints.MapHealthChecks("/health");
             });
         }
@@ -120,10 +127,10 @@ namespace PictureFinder.Presentation
                         .Where(e => e.Value.Errors.Count > 0)
                         .Select(e => new ValidationProblemDetails(actionContext.ModelState)).FirstOrDefault();
 
-                    Log.Error($"{{@RequestPath}} received invalid message format: {{@Exception}}. {{@ModelState}}", 
-                       actionContext.HttpContext.Request.Path.Value, 
-                       error.Errors.Values,
-                       actionContext.ModelState.Keys);
+                    Log.Error("{@RequestPath} received invalid message format: {@Exception}. {@ModelState}",
+                        actionContext.HttpContext.Request.Path.Value,
+                        error.Errors.Values,
+                        actionContext.ModelState.Keys);
                     return new BadRequestObjectResult(error);
                 };
             });

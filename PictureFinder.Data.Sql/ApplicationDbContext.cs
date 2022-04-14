@@ -6,15 +6,14 @@ namespace PictureFinder.Data.Sql
 {
     public class ApplicationDbContext : DbContext
     {
-        public DbSet<Photo> Photos { get; set; }
-
-        public DbSet<Tag> Tags { get; set; }
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
             base(options)
         {
-
         }
+
+        public DbSet<Photo> Photos { get; set; }
+
+        public DbSet<Tag> Tags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

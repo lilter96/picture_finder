@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using PictureFinder.Application.WebServices;
+using PictureFinder.Presentation.Models;
 using PictureFinder.Presentation.Models.Photo;
 
 namespace PictureFinder.Presentation.Controller
@@ -25,7 +25,7 @@ namespace PictureFinder.Presentation.Controller
         [HttpPost]
         public async Task<IActionResult> Index(string tagName)
         {
-            var photos = await _photoService.GetPhotosWithTagsByTagName(tagName);
+            var photos = await _photoService.GetPhotosWithTagsByTagNameAsync(tagName);
             var model = new PhotoResponseModel
             {
                 Photos = photos,
@@ -36,8 +36,12 @@ namespace PictureFinder.Presentation.Controller
         }
 
         [HttpPut]
-        public async Task<IActionResult> Delete()
+        public async Task<IActionResult> Delete([FromBody] DeleteByTagPhoto model)
         {
+            var result = await _photoService.DeletePhotosByTagNameAsync(model.Tag);
+
+            if (result) return Ok();
+
             return BadRequest();
         }
     }

@@ -2,47 +2,66 @@
 @model PictureFinder.Presentation.Models.Photo.PhotoResponseModel
 @*
 *@
-@{
-}
 <html>
 <head>
     <title>PhotoFinder</title>
-    <link rel="stylesheet" href="dist/index.css" />
+    <link rel="stylesheet" href="dist/index.css"/>
     <script type="text/javascript" src="dist/index.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
 </head>
 
 <body>
-<div class="container">
-    <h1>PictureFinder</h1>
-    <div class="tag-input">
-        <form method="post" asp-controller="Photo" asp-action="Index">
-            <input type="text" name="TagName" value="@Model.SearchTagName" />
-            <button type="submit">Search</button>
-        </form>
-
-        @{
-            if (!(@Model.Photos == null || @Model.Photos.Count == 0))
+<header>
+    <div class="container">
+        <h1>PictureFinderrr</h1>
+        <div class="search-tag">
+            <div class="search-tag-form__container">
+                <form method="post" asp-controller="Photo" asp-action="Index">
+                    <div class="search-tag-input__container">
+                        <label>Тэг</label>
+                        <input placeholder="Введите название тэга" id="tagName-input" type="text" name="TagName" value="@Model.SearchTagName"/>
+                    </div>
+                    <div class="search-tag-buttons_container">
+                        <button id="tagName-submit-button" type="submit">Найти</button>
+                        @{
+                            if (!(Model.Photos == null || Model.Photos.Count == 0))
+                            {
+                                <input id="delete-input" name="IsDeleted" type="button" value="Удалить">
+                            }
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+<section>
+    @{
+        if (Model.Photos == null || Model.Photos.Count == 0)
+        {
+            @if (Model.Photos != null)
             {
-                <input id="delete-input" name="IsDeleted" type="submit" value="Delete">
+                <div class="photos-no-photos">
+                    Фотографий с тэгом @Model.SearchTagName не найдено.<br/>
+                    Попробуйте попозже :)
+                </div>
             }
         }
-    </div>
-    <div class="photo-container">
-        @{
-            if (@Model.Photos == null || @Model.Photos.Count == 0)
-            {
-                <div>Нет фоток</div>
-            }
-            else 
-            {
-                foreach (var photo in Model.Photos)
+        else
+        {
+            <div class="photos">
+                @foreach (var photo in Model.Photos)
                 {
-                    <img height="100" width="100" src=@photo.ImageUrl alt="Photo"/>
+                    <div class="photo">
+                        <img height="100" width="100" src=@photo.ImageUrl alt="Photo"/>
+                    </div>
                 }
-            }
+            </div>
         }
-    </div>
-</div>
+    }
+</section>
 </body>
 </html>
 

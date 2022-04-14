@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using PictureFinder.Application.Dto;
@@ -14,15 +13,15 @@ namespace PictureFinder.Application.WebServices
 {
     public class TelegramService : ITelegramService
     {
-        private readonly ITelegramBotClient _telegramBotClient;
-        private readonly TelegramBotConfiguration _telegramBotConfiguration;
         private readonly IPhotoRepository _photoRepository;
         private readonly ITagRepository _tagRepository;
+        private readonly ITelegramBotClient _telegramBotClient;
+        private readonly TelegramBotConfiguration _telegramBotConfiguration;
 
         public TelegramService(
             ITelegramBotClient telegramBotClient,
-            TelegramBotConfiguration telegramBotConfiguration, 
-            IPhotoRepository photoRepository, 
+            TelegramBotConfiguration telegramBotConfiguration,
+            IPhotoRepository photoRepository,
             ITagRepository tagRepository)
         {
             _telegramBotClient = telegramBotClient;
@@ -38,9 +37,7 @@ namespace PictureFinder.Application.WebServices
             var mediaGroupId = photosContainer.MediaGroupId;
 
             if (string.IsNullOrEmpty(photosContainer.Caption))
-            {
                 photosContainer.Caption = await GetTagsFromSameMediaGroupOrUtcAsync(mediaGroupId);
-            }
 
             var tags = ExtractTagsFromCaption(photosContainer.Caption);
 
@@ -62,19 +59,15 @@ namespace PictureFinder.Application.WebServices
 
         private static PhotosContainerDto GetObjectContainsPhotos(UpdateDto updateDto)
         {
-            if (updateDto.Message != null && 
-                updateDto.Message.Photo != null && 
+            if (updateDto.Message != null &&
+                updateDto.Message.Photo != null &&
                 updateDto.Message.Photo.Count > 0)
-            {
                 return updateDto.Message;
-            }
 
-            if (updateDto.ChannelPost != null && 
+            if (updateDto.ChannelPost != null &&
                 updateDto.ChannelPost.Photo != null &&
                 updateDto.ChannelPost.Photo.Count > 0)
-            {
                 return updateDto.ChannelPost;
-            }
 
             throw new UpdateObjectDoesNotContainPhotoException($"{nameof(updateDto)} does not contain photo.");
         }
@@ -92,28 +85,30 @@ namespace PictureFinder.Application.WebServices
             return await _telegramBotClient.GetFilePath(fileId);
         }
 
-        private string CreatePhotoUrl(string filePath) =>
-            _telegramBotConfiguration.BaseFilesApiUrl
-            + _telegramBotConfiguration.ApiKey
-            + "/"
-            + string.Format(TelegramBotApiUrls.DownloadFile, filePath);
+        private string CreatePhotoUrl(string filePath)
+        {
+            return _telegramBotConfiguration.BaseFilesApiUrl
+                   + _telegramBotConfiguration.ApiKey
+                   + "/"
+                   + string.Format(TelegramBotApiUrls.DownloadFile, filePath);
+        }
 
         private static List<Tag> ExtractTagsFromCaption(string caption)
         {
-            return new List<Tag> { new Tag
+            return new List<Tag>
             {
-                Name = caption
-            }};
+                new Tag
+                {
+                    Name = caption
+                }
+            };
         }
 
         private async Task<string> GetTagsFromSameMediaGroupOrUtcAsync(string mediaGroupId)
         {
             var tags = await _photoRepository.GetTagsFromSameMediaGroupsAsync(mediaGroupId);
 
-            if (tags == null || tags.Count == 0)
-            {
-                return DateTime.UtcNow.ToLongDateString();
-            }
+            if (tags == null || tags.Count == 0) return DateTime.UtcNow.ToLongDateString();
 
             return tags.First().Name;
         }

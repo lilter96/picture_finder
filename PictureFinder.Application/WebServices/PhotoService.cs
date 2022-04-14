@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using PictureFinder.Data.Repositories;
-using PictureFinder.Domain.Photo;
 using PictureFinder.Domain.Photo.Dto;
 
 namespace PictureFinder.Application.WebServices
@@ -16,11 +14,16 @@ namespace PictureFinder.Application.WebServices
             _photoRepository = photoRepository;
         }
 
-        public async Task<List<PhotoWithTagsResponseDto>> GetPhotosWithTagsByTagName(string tagName)
+        public async Task<List<PhotoWithTagsResponseDto>> GetPhotosWithTagsByTagNameAsync(string tagName)
         {
             var dto = await _photoRepository.GetPhotoByTagsAsync(new List<string> {tagName});
 
             return dto;
+        }
+
+        public async Task<bool> DeletePhotosByTagNameAsync(string tagName)
+        {
+            return await _photoRepository.DeleteByTagNameAsync(tagName);
         }
     }
 }

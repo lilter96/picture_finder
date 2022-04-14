@@ -30,10 +30,7 @@ namespace PictureFinder.Data.Sql.Repository
         {
             var entity = await GetByIdAsync(id);
 
-            if (entity == null)
-            {
-                return false;
-            }
+            if (entity == null) return false;
 
             Context.Set<TEntity>().Remove(entity);
             await Context.SaveChangesAsync();

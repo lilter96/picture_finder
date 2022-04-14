@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using EnsureThat;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
+
 namespace PictureFinder.Presentation.ExceptionHandling
 {
     public static class ErrorHttpResponseExtensions

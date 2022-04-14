@@ -19,13 +19,14 @@ namespace PictureFinder.Data.Sql.Repository
 
         public async Task<List<PhotoWithTagsResponseDto>> GetPhotoByTagsAsync(List<string> tags)
         {
-            return await Photos.Include(x => x.Tags).Where(photo => photo.Tags.Any(tag => tags.Any(y => tag.Name == y))).Select(
-                photo => new PhotoWithTagsResponseDto
-                {
-                    PhotoId = photo.Id,
-                    ImageUrl = photo.Url,
-                    Tags = photo.Tags
-                }).ToListAsync();
+            return await Photos.Include(x => x.Tags).Where(photo => photo.Tags.Any(tag => tags.Any(y => tag.Name == y)))
+                .Select(
+                    photo => new PhotoWithTagsResponseDto
+                    {
+                        PhotoId = photo.Id,
+                        ImageUrl = photo.Url,
+                        Tags = photo.Tags
+                    }).ToListAsync();
         }
 
         public async Task<Photo> AddPhotoWithTagsAsync(AddPhotoWithTagsRequestDto addPhotoWithTagsRequestDto)
@@ -45,9 +46,22 @@ namespace PictureFinder.Data.Sql.Repository
 
         public async Task<List<Tag>> GetTagsFromSameMediaGroupsAsync(string mediaGroupId)
         {
-            var photo = await Photos.Include(p => p.Tags).FirstOrDefaultAsync(photo => photo.MediaGroupId == mediaGroupId);
+            var photo = await Photos.Include(p => p.Tags)
+                .FirstOrDefaultAsync(photo => photo.MediaGroupId == mediaGroupId);
 
             return photo?.Tags;
+        }
+
+        public async Task<bool> DeleteByTagNameAsync(string tagName)
+        {
+            var photosForRemove = Photos.Include(p => p.Tags)
+                .Where(photo => photo.Tags.Select(t => t.Name).Contains(tagName));
+
+            if (photosForRemove == null || !photosForRemove.Any()) return false;
+
+            Photos.RemoveRange(photosForRemove);
+
+            return await Context.SaveChangesAsync() > 0;
         }
     }
 }

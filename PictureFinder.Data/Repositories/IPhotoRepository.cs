@@ -14,5 +14,7 @@ namespace PictureFinder.Data.Repositories
         public Task<Photo> AddPhotoWithTagsAsync(AddPhotoWithTagsRequestDto addPhotoWithTagsRequestDto);
 
         public Task<List<Tag>> GetTagsFromSameMediaGroupsAsync(string messageId);
+
+        public Task<bool> DeleteByTagNameAsync(string tagName);
     }
 }

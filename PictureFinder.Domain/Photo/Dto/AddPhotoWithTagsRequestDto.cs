@@ -8,6 +8,6 @@ namespace PictureFinder.Domain.Photo.Dto
 
         public string PhotoUrl { get; set; }
 
-        public List<Domain.Tag.Tag> Tags { get; set; } 
+        public List<Tag.Tag> Tags { get; set; }
     }
 }
